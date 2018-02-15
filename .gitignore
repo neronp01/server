@@ -1,0 +1,8 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/$RESOURCE_DIR
+/node_modules
+/run
+/functions/lib
+/functions/node_modules

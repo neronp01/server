@@ -29,6 +29,9 @@ const gmailEmail = functions.config().gmail.email;
 const gmailPassword = functions.config().gmail.password;
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
+  host: 'smtp.ethereal.email',
+  port: 587,
+  secure: false,
   auth: {
     user: gmailEmail,
     pass: gmailPassword,
@@ -194,22 +197,58 @@ export const stripeWebhooks = functions.https.onRequest((req, res) => {
       const noFactureFirst = infoFactFirst['numberFac'];
       const montantFirst = infoFactFirst['montant'];
       mailOptions = {
-            from: '"Le club des Ornithologues de l\'Outaouais" <cooutaouais@outlook.com>',
+            from: '"Le Club des ornithologues de l\'Outaouais" <cooutaouais@gmail.com>',
             to: val.to,
-            subject: 'CLUB DES ORNITHOLOGUES DES L\'OUTAOUAIS',
+            subject: 'CLUB DES ORNITHOLOGUES DE L\'OUTAOUAIS',
             text: '',
-            html:`<p> Merci d’avoir adhérer au Club des ornithologues de l’Outaouais (COO). C’est avec plaisir que nous vous accueillons! </p> <br>
-            <p>Votre adhésion au COO vous permet de participer aux nombreuses activités du Club qui sont organisées tout au long de l’année et vous donne accès au format numérique du journal du Club, L’Ornitaouais, publié quatre fois par année.  Cliquer ici pour obtenir la dernière édition :</p><a href="www.grandpic.org"> www.grandpic/ornitaouais.org </a><p>
-            Si vous avez payé (10$)  pour recevoir la version papier, vous recevrez votre première copie de la prochaine édition. 
-             </p>
-             <br>
-             <p>Afin de vous permettre de mieux apprécier votre participation au COO, nous vous invitons à lire le</p><a href="https://quebecoiseaux.org/index.php/fr/publications/code">Code de conduite</a> <p> à adopter lors de vos sorties d’observation </p>
-           <br>
-           <p>Consultez le site Web pour savoir comment rapporter et partager vos observations :</p><a href="http://coo.qc.ca/observations/VosObservations.php ">coo.qc.ca/observations/VosObservations</a></p>. Votre contribution permet d’enrichir nos connaissances sur les populations d’oiseaux.</p>
-             <p>Consultez régulièrement le site Web du COO pour connaître les activités, les changements au programme des activités et toutes autres nouvelles d’intérêt pour les ornithologues amateurs de l’Outaouais :</p><a href="www.coo.qc.ca"> www.coo.qc.ca</a><p>.</p>
+            html:
+            `<!DOCTYPE html>
+            <html lang="fr">
+              <head>
+                <title>Making Accessible Emails</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <style type="text/css">
+                    /* CLIENT-SPECIFIC STYLES */
+                    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+                    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                    img { -ms-interpolation-mode: bicubic; }
             
-            <br><br><h3>Votre numéron de facture est ${noFactureFirst}</h3><br><h3>Le montant de l'adhésion est de :\$${montantFirst/100}.00</h3>`
-
+                    /* RESET STYLES */
+                    img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+                    table { border-collapse: collapse !important; }
+                    body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+                </style>
+              </head>
+              <body style="background-color: black; margin: 0 !important; padding: 60px 0 60px 0 !important;">
+                <table border="0" cellspacing="0" cellpadding="0" role="presentation" width="100%">
+                  <tr>  
+                      <td bgcolor="black" style="font-size: 0;">&​nbsp;</td>
+                      <td bgcolor="black" width="600" style="border-radius: 4px; color: grey; font-family: sans-serif; font-size: 18px; line-height: 28px; padding: 40px 40px;">
+                        <article>
+                          <h1 style="color: white; font-size: 32px; font-weight: bold; line-height: 36px; margin: 0 0 30px 0; text-align: center;">Club des ornithologues de l’Outaouais (COO)</h1>
+                          <img alt="" src="https://firebasestorage.googleapis.com/v0/b/coov3-f509c.appspot.com/o/picEmail.png?alt=media&token=03f45c89-a227-47c7-9f92-962f830ec210" height="300" width="600" style="background-color: black; color: #f8c433; display: block; font-family: sans-serif; font-size: 72px; font-weight: bold; height: auto; max-width: 100%; text-align: center; width: 100%;">
+                        <!-- Photo by Josh Nuttall on Unsplash -->
+                          <p style="margin: 30px 0 30px 0;">Votre transaction a été autorisée et votre numéro de facture est : <span style="color: #C51162;">${noFactureFirst}</span>.</p>
+                          <p style="margin: 30px 0 30px 0;">Merci d’avoir adhéré au Club des ornithologues de l’Outaouais (COO). C’est avec plaisir que nous vous accueillons!</p>
+                          <pstyle="margin: 30px 0 30px 0;">Votre adhésion au COO vous permet de participer aux nombreuses activités du Club qui sont organisées tout au long de l’année et vous donne accès au format numérique du journal du Club, <span style="font-style: italic;">L’Ornitaouais</span>, publié quatre fois par année.  Cliquer ici pour obtenir la dernière édition :</p>
+                          <p style="margin: 30px 0 30px 0; text-align: center;">
+                            <a href="https://grandpic.org" target="_blank" style="font-size: 18px; font-family: sans-serif; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 8px; -webkit-border-radius: 8px; background-color: #C51162; border-top: 20px solid #C51162; border-bottom: 18px solid #C51162; border-right: 40px solid #C51162; border-left: 40px solid #C51162; display: inline-block;">Accéder au GrandPic.org</a>
+                          </p>
+                          <p>
+                            Si vous avez payé (10$)  pour recevoir la version papier, vous recevrez votre première copie de la prochaine édition.</p>
+                          <br>
+                          <p style="margin: 0 0 30px 0;">Afin de vous permettre de mieux apprécier votre participation au COO, nous vous invitons à lire le <a href="http://www.coo.qc.ca/coo/CodeEthique.php">Code de conduite</a> à adopter lors de vos sorties d’observations.</p>
+                          <br>
+                          <p style="margin: 0 0 30px 0;">Visitez le site Web pour consulter le programme des activités en cours au www.coo.ca <a href="http://www.coo.qc.ca/">www.coo.qc.ca</a>.</p>
+                        </article>
+                      </td>
+                      <td bgcolor="black" style="font-size: 0;">&​nbsp;</td>
+                  </tr>
+                </table>
+              </body>
+            </html>`
       }
     break;
 
@@ -218,7 +257,7 @@ export const stripeWebhooks = functions.https.onRequest((req, res) => {
       const noFacture = infoFact['numberFac'];
       const montant = infoFact['montant'];
       mailOptions = {
-            from: '"Le club des Ornithologues de l\'Outaouais" <cooutaouais@outlook.com>',
+            from: '"Le Club des ornithologues de l\'Outaouais" <cooutaouais@outlook.com>',
             to: val.to,
             subject: 'CLUB DES ORNITHOLOGUES DES L\'OUTAOUAIS',
             text: '',
@@ -231,16 +270,16 @@ export const stripeWebhooks = functions.https.onRequest((req, res) => {
       break;
       case 'communication':
       mailOptions = {
-        from: `"Le club des Ornithologues de l\'Outaouais" <${val.from}>`,
+        from: `"Un membre COO" <${val.from}>`,
         to: val.to,
         subject: 'Un membre du COO vous envoie un message',
         text: '',
-        html:`<br><br><p>${val.texte}</p>`
+        html:`<p>Le membre ${val.from} vous envoie ce message:</p><br><br><p>${val.texte}</p>`
   }
       break;
       case 'avisRenouvellement':
       mailOptions = {
-        from: `"Le club des Ornithologues de l\'Outaouais" <${val.from}>`,
+        from: `"Le Club des ornithologues de l\'Outaouais" <${val.from}>`,
         to: val.to,
         subject: 'Avis de renouvellement ',
         text: '',
@@ -254,7 +293,7 @@ export const stripeWebhooks = functions.https.onRequest((req, res) => {
 
   case 'avisRenouvellement2':
       mailOptions = {
-        from: `"Le club des Ornithologues de l\'Outaouais" <${val.from}>`,
+        from: `"Le Club des ornithologues de l\'Outaouais" <${val.from}>`,
         to: val.to,
         subject: 'Avis de renouvellement ',
         text: '',
@@ -267,7 +306,7 @@ export const stripeWebhooks = functions.https.onRequest((req, res) => {
   break;
   case 'avisRenouvellement3':
       mailOptions = {
-        from: `"Le club des Ornithologues de l\'Outaouais" <${val.from}>`,
+        from: `"Le Club des ornithologues de l\'Outaouais" <${val.from}>`,
         to: val.to,
         subject: 'Avis de renouvellement ',
         text: '',
@@ -534,3 +573,14 @@ exports.stripeCharge = functions.database
 
 
 });
+
+exports.updateBd = functions.firestore
+                                .document('users')
+                                .onUpdate(event => {
+                                  const membre = event.data.data();
+                                
+                          
+                                  admin.database()
+                                  .ref(`/users`)
+                                  .set(membre)   
+                                })
